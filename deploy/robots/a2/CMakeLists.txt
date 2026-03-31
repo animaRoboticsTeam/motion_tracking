@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(a2_controller)
 
+add_definitions(-DSPDLOG_FMT_EXTERNAL)
+
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(yaml-cpp REQUIRED)
 
