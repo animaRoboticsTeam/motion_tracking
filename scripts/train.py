@@ -18,7 +18,7 @@ from mjlab.utils.gpu import select_gpus
 from mjlab.utils.os import dump_yaml, get_checkpoint_path
 from mjlab.utils.torch import configure_torch_backends
 from mjlab.utils.wrappers import VideoRecorder
-
+from export_deploy_cfg import export_deploy_cfg
 
 @dataclass(frozen=True)
 class TrainConfig:
@@ -92,6 +92,9 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
   env = ManagerBasedRlEnv(
     cfg=cfg.env, device=device, render_mode="rgb_array" if cfg.video else None
   )
+
+  # Export deploy.yaml
+  export_deploy_cfg(env, log_dir)
 
   log_root_path = log_dir.parent  # Go up from specific run dir to experiment dir.
 

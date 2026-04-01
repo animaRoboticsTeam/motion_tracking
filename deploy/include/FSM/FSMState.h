@@ -44,6 +44,43 @@ public:
             }
         }
 
+
+        // --- 新增：键盘控制逻辑 ---
+        // 假设我们定义：键盘 '1' 站立，'2' 走路，'3' 跳舞，'0' 退出
+        std::map<std::string, std::string> kb_shortcuts = {
+            {"0", "Passive"},
+            {"1", "FixStand"},
+            {"2", "Velocity"},
+            {"3", "Mimic_Pick_up_box"},
+            {"up", "FixStand"},    // 额外支持物理方向键
+            {"down", "Passive"}
+        };
+        
+        for(auto const& [key_str, target_name] : kb_shortcuts)
+        {
+            if(FSMStringMap.right.count(target_name))
+            {
+                int target_id = FSMStringMap.right.at(target_name);
+                
+                registered_checks.emplace_back(
+                    std::make_pair(
+                        [key_str]()->bool { 
+                            if (!keyboard) return false;
+
+                            // 逻辑：
+                            // 1. keyboard->on_pressed 必须为 true（表示这是按下瞬间）
+                            // 2. keyboard->key() 的内容必须匹配我们定义的键（如 "1" 或 "up"）
+                            return keyboard->on_pressed && (keyboard->key() == key_str); 
+                        },
+                        target_id
+                    )
+                );
+                spdlog::info("State_{}: Registered KB Shortcut [{}] -> {}", state_string, key_str, target_name);
+            }
+        }
+        
+        //-------------------------
+
         // register for all states
         registered_checks.emplace_back(
             std::make_pair(
