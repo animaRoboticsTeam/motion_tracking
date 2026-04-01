@@ -18,7 +18,8 @@ public:
     }
 
     void enter()
-    {
+    {   
+        start_time = std::chrono::steady_clock::now();
         // set gain
         static auto kp = param::config["FSM"]["FixStand"]["kp"].as<std::vector<float>>();
         static auto kd = param::config["FSM"]["FixStand"]["kd"].as<std::vector<float>>();

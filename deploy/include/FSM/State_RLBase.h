@@ -14,6 +14,7 @@ public:
     
     void enter()
     {
+        start_time = std::chrono::steady_clock::now();
         // set gain
         for (int i = 0; i < env->robot->data.joint_stiffness.size(); ++i)
         {

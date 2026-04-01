@@ -23,7 +23,7 @@ public:
     } 
 
     void enter()
-    {
+    { 
         // set gain
         static auto kd = param::config["FSM"]["Passive"]["kd"].as<std::vector<float>>();
         for(int i(0); i < kd.size(); ++i)

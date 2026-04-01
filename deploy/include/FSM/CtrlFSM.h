@@ -87,6 +87,28 @@ private:
         
         // Check if need to change state
         int nextStateMode = 0;
+
+        std::string current_name = currentState->getStateString();
+
+        if (current_name == "Passive") {
+            // 1. 如果是 Passive，无条件触发 FixStand
+            nextStateMode = FSMStringMap.right.at("FixStand");
+        } 
+        else if (current_name == "FixStand") {
+            // 2. 如果是 FixStand，判断是否已经站稳（比如进入该状态超过 2 秒）
+            // 注意：BaseState 需要有获取状态运行时间的方法，假设为 duration()
+            if (currentState->duration() > 5.0) { 
+                spdlog::info("FSM: 111");
+                nextStateMode = FSMStringMap.right.at("Velocity");
+            }
+        }
+        else if (current_name == "Velocity") {
+            // 3. 如果进入了 Velocity，稍微等一下就自动跳舞
+            if (currentState->duration() > 5.0) {
+                nextStateMode = FSMStringMap.right.at("Mimic_Pick_up_box");
+            }
+        }
+
         for(int i(0); i<currentState->registered_checks.size(); i++)
         {
             if(currentState->registered_checks[i].first())
@@ -95,6 +117,7 @@ private:
                 break;
             }
         }
+        
 
         if(nextStateMode != 0 && !currentState->isState(nextStateMode))
         {

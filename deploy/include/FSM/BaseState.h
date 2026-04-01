@@ -7,6 +7,7 @@
 #include <string>
 #include <any>
 #include <utility>
+#include <chrono>
 
 inline boost::bimap<int, std::string> FSMStringMap;
 
@@ -18,7 +19,8 @@ public:
         FSMStringMap.insert({state, state_string});
     }
 
-    virtual void enter() {}
+    virtual void enter() {
+    }
 
     virtual void pre_run() {}
     virtual void run() {}
@@ -26,10 +28,17 @@ public:
 
     virtual void exit() {}
 
+    double duration() const {
+        auto now = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed = now - start_time;
+        return elapsed.count();
+    }
+
     std::string getStateString() { return FSMStringMap.left.at(state_); }
     int getState() {return state_; }
     bool isState(int state) { return state_ == state; }
     std::vector<std::pair<std::function<bool()>, int>> registered_checks;
+    std::chrono::time_point<std::chrono::steady_clock> start_time;
 private:
     int state_;
 };
