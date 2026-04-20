@@ -130,6 +130,7 @@ inline po::variables_map helper(int argc, char** argv)
         ("version,v", "show version")
         ("log", "record log file")
         ("network,n", po::value<std::string>()->default_value(""), "dds network interface")
+        ("domain_id,d", po::value<int>()->default_value(1), "dds domain id")
         ;
 
     po::variables_map vm;

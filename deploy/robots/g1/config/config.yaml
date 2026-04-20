@@ -76,7 +76,9 @@ FSM:
       Passive: LT + B.on_pressed
       Velocity: RT + A.on_pressed
 
-    motion_file: config/policy/mimic/pick_up_box/params/ACCAD_Female1General_c3d_A5_pick_up_box_stageii.npz
-    policy_dir: config/policy/mimic/pick_up_box/
+    # motion_file: config/policy/mimic/pick_up_box/params/ACCAD_Female1General_c3d_A5_pick_up_box_stageii.npz
+    # policy_dir: config/policy/mimic/pick_up_box/
+    motion_file: config/policy/mimic/lafan1_dance1_subject2/params/lafan1_dance1_subject2.npz
+    policy_dir: config/policy/mimic/lafan1_dance1_subject2/
     time_start: 0.0
     time_end: 1000.0
