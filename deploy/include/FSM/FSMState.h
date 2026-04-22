@@ -51,7 +51,7 @@ public:
             {"0", "Passive"},
             {"1", "FixStand"},
             {"2", "Velocity"},
-            {"3", "Mimic_Pick_up_box"},
+            {"3", "Mimic_TaiChi"},
             {"up", "FixStand"},    // 额外支持物理方向键
             {"down", "Passive"}
         };
