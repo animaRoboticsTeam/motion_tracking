@@ -10,7 +10,7 @@ robot_scene: "src/assets/robots/unitree_g1/xmls/scene_g1.xml"
 #robot_scene: "src/assets/robots/unitree_a2/xmls/scene_a2.xml"
 
 domain_id: 1  # Domain id
-interface: "lo" # Interface
+interface: "enp11s0" # Interface
 
 use_joystick: 0 # Simulate Unitree WirelessController using a gamepad
 joystick_type: "xbox" # support "xbox" and "switch" gamepad layout
