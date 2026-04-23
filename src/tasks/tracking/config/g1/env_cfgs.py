@@ -1,8 +1,12 @@
 """Unitree G1 flat tracking environment configurations."""
 
-from mjlab.asset_zoo.robots import (
-  G1_ACTION_SCALE,
-  get_g1_robot_cfg,
+# from mjlab.asset_zoo.robots import (
+#   G1_ACTION_SCALE,
+#   get_g1_robot_cfg,
+# )
+from src.assets.robots import (
+    G1_ACTION_SCALE,
+    get_g1_robot_cfg,
 )
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs.mdp.actions import JointPositionActionCfg
