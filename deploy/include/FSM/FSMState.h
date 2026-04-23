@@ -46,12 +46,14 @@ public:
 
 
         // --- 新增：键盘控制逻辑 ---
-        // 假设我们定义：键盘 '1' 站立，'2' 走路，'3' 跳舞，'0' 退出
+        // 假设我们定义：键盘 '1' 站立，'2' 走路，'3 4 5' mimic动作，'0' 退出
         std::map<std::string, std::string> kb_shortcuts = {
             {"0", "Passive"},
             {"1", "FixStand"},
             {"2", "Velocity"},
             {"3", "Mimic_TaiChi"},
+            {"4", "Mimic_PickUpBox"},
+            {"5", "Mimic_Lafan1_Dance1_Subject2"},
             {"up", "FixStand"},    // 额外支持物理方向键
             {"down", "Passive"}
         };

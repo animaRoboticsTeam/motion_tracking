@@ -53,40 +53,8 @@ State_RLBase::State_RLBase(int state_mode, std::string state_string)
 
 void State_RLBase::run()
 {
-    // auto action = env->action_manager->processed_actions();
-    // for(int i(0); i < env->robot->data.joint_ids_map.size(); i++) {
-    //     lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = action[i];
-    // }
-
-
-    // 1. 获取 RL 策略输出 (包含全身 29 个关节)
     auto action = env->action_manager->processed_actions();
-    
-    // 2. 计算插值系数
-    float elapsed_time = this->duration();
-     
-    float alpha = std::min(elapsed_time / transition_time, 1.0f);
-
-    // 3. 遍历动作映射表
-    for(int i(0); i < env->robot->data.joint_ids_map.size(); i++) 
-    {
-        int motor_id = env->robot->data.joint_ids_map[i];
-        float target_q = action[i]; // RL 策略希望达到的位置
-
-        // --- 核心修改：分部位逻辑 ---
-        
-        // 如果是腿部或腰部 (0-14)，直接下发，不进行插值
-        if (motor_id < 15) 
-        {
-            lowcmd->msg_.motor_cmd()[motor_id].q() = target_q;
-        }
-        // 如果是手臂 (15-28)，执行平滑插值
-        else 
-        {
-            float start_q = initial_q[motor_id];
-            // 从跳舞结束的位置缓慢移动到 RL 期望的位置
-            float blended_q = start_q * (1.0f - alpha) + target_q * alpha;
-            lowcmd->msg_.motor_cmd()[motor_id].q() = blended_q;
-        }
+    for(int i(0); i < env->robot->data.joint_ids_map.size(); i++) {
+        lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = action[i];
     }
 }
