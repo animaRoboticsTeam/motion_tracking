@@ -20,6 +20,13 @@ FSM:
       id: 7
       type: Mimic
 
+    Mimic_Lie_To_Down:
+      id: 8
+      type: Mimic
+
+    Mimic_Get_Up:
+      id: 9
+      type: Mimic
 
   Passive:
     transitions: 
@@ -77,6 +84,8 @@ FSM:
       Mimic_TaiChi: RB + A.on_pressed #  or "3" in the keyboard
       #  Mimic_PickUpBox -> "4" in the keyboard
       #  Mimic_Lafan1_Dance1_Subject2 -> "5" in the keyboard
+      #  Mimic_Lie_To_Down -> "6" in the keyboard
+      #  Mimic_Get_Up -> "7" in the keyboard
     policy_dir: config/policy/velocity
 
 
@@ -107,5 +116,25 @@ FSM:
 
     motion_file: config/policy/mimic/lafan1_dance1_subject2/params/dance1_subject2.npz
     policy_dir: config/policy/mimic/lafan1_dance1_subject2/
+    time_start: 0.0
+    time_end: 1000.0
+
+  Mimic_Lie_To_Down:
+    transitions:
+      Passive: LT + B.on_pressed #  or "0" in the keyboard
+      #  Mimic_Get_Up -> "7" in the keyboard
+
+    motion_file: config/policy/mimic/accad_male_crouch_to_lie_down/params/accad_male_crouch_to_lie_down.npz
+    policy_dir: config/policy/mimic/accad_male_crouch_to_lie_down/
+    time_start: 0.0
+    time_end: 1000.0
+
+  Mimic_Get_Up:
+    transitions:
+      Passive: LT + B.on_pressed #  or "0" in the keyboard
+      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+
+    motion_file: config/policy/mimic/cmu_get_up_from_laying_back/params/cmu_get_up_from_laying_back.npz
+    policy_dir: config/policy/mimic/cmu_get_up_from_laying_back/
     time_start: 0.0
     time_end: 1000.0

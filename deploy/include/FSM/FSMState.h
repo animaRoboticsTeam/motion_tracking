@@ -54,6 +54,8 @@ public:
             {"3", "Mimic_TaiChi"},
             {"4", "Mimic_PickUpBox"},
             {"5", "Mimic_Lafan1_Dance1_Subject2"},
+            {"6", "Mimic_Lie_To_Down"},
+            {"7", "Mimic_Get_Up"},
             {"up", "FixStand"},    // 额外支持物理方向键
             {"down", "Passive"}
         };

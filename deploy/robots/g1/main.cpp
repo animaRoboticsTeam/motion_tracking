@@ -60,6 +60,8 @@ int main(int argc, char** argv)
     std::cout << "Press [3] to start TaiChi mimic.\n";
     std::cout << "Press [4] to start PickUpBox mimic.\n";
     std::cout << "Press [5] to start Lafan1 Dance1 Subject2 mimic.\n";
+    std::cout << "Press [6] to start Lie To Down mimic.\n";
+    std::cout << "Press [7] to start Get Up mimic.\n";
     std::cout << "Press [0] to enter Passive mode.\n";
     std::cout << "---------------------------------------------\n";
 
