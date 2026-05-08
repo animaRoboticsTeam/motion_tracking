@@ -1,4 +1,7 @@
 from typing import Any
+import warp as wp
+if not hasattr(wp, "context"):
+    wp.context = wp._src.context
 
 import numpy as np
 import torch

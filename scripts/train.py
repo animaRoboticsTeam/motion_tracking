@@ -1,4 +1,7 @@
 """Script to train RL agent with RSL-RL."""
+import warp as wp
+if not hasattr(wp, "context"):
+    wp.context = wp._src.context
 
 import logging
 import os

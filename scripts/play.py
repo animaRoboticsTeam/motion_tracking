@@ -1,5 +1,7 @@
 """Script to play RL agent with RSL-RL."""
-
+import warp as wp
+if not hasattr(wp, "context"):
+    wp.context = wp._src.context
 import os
 import sys
 from dataclasses import asdict, dataclass
