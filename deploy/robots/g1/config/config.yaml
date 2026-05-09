@@ -20,17 +20,17 @@ FSM:
       id: 7
       type: Mimic
 
-    Mimic_Lie_To_Down:
+    Mimic_Squat:
       id: 8
       type: Mimic
 
-    Mimic_Get_Up:
+    Mimic_Move_Arms:
       id: 9
       type: Mimic
 
   Passive:
     transitions: 
-      FixStand: LT + up.on_pressed #  or "1" in the keyboard
+      FixStand: "1" #  or "1" in the keyboard
     mode: [
       1,1,1,1,1,1,
       1,1,1,1,1,1,
@@ -49,8 +49,8 @@ FSM:
 
   FixStand:
     transitions: 
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
     kp: [
       100,100,100,150,40,40,
@@ -80,19 +80,20 @@ FSM:
 
   Velocity:
     transitions: 
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Mimic_TaiChi: RB + A.on_pressed #  or "3" in the keyboard
-      #  Mimic_PickUpBox -> "4" in the keyboard
-      #  Mimic_Lafan1_Dance1_Subject2 -> "5" in the keyboard
-      #  Mimic_Lie_To_Down -> "6" in the keyboard
-      #  Mimic_Get_Up -> "7" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      FixStand: "1" #  or "1" in the keyboard
+      Mimic_TaiChi: "3" #  or "3" in the keyboard
+      Mimic_PickUpBox: "4" # "4" in the keyboard
+      Mimic_Lafan1_Dance1_Subject2: "5" # "5" in the keyboard
+      Mimic_Squat: "6" # "6" in the keyboard
+      Mimic_Move_Arms: "7" # "7" in the keyboard
     policy_dir: config/policy/velocity
 
 
   Mimic_TaiChi:
     transitions:
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
     motion_file: config/policy/mimic/taichi_v0/params/tai_chi.npz
     policy_dir: config/policy/mimic/taichi_v0/
@@ -101,8 +102,8 @@ FSM:
 
   Mimic_PickUpBox:
     transitions:
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
     motion_file: config/policy/mimic/pick_up_box/params/ACCAD_Female1General_c3d_A5_pick_up_box_stageii.npz
     policy_dir: config/policy/mimic/pick_up_box/
@@ -111,30 +112,30 @@ FSM:
 
   Mimic_Lafan1_Dance1_Subject2:
     transitions:
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
     motion_file: config/policy/mimic/lafan1_dance1_subject2/params/dance1_subject2.npz
     policy_dir: config/policy/mimic/lafan1_dance1_subject2/
     time_start: 0.0
     time_end: 1000.0
 
-  Mimic_Lie_To_Down:
+  Mimic_Squat:
     transitions:
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      #  Mimic_Get_Up -> "7" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
-    motion_file: config/policy/mimic/accad_male_crouch_to_lie_down/params/accad_male_crouch_to_lie_down.npz
-    policy_dir: config/policy/mimic/accad_male_crouch_to_lie_down/
+    motion_file: config/policy/mimic/squat_gvhmr/params/squat_gvhmr.npz
+    policy_dir: config/policy/mimic/squat_gvhmr/
     time_start: 0.0
     time_end: 1000.0
 
-  Mimic_Get_Up:
+  Mimic_Move_Arms:
     transitions:
-      Passive: LT + B.on_pressed #  or "0" in the keyboard
-      Velocity: RT + A.on_pressed #  or "2" in the keyboard
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
 
-    motion_file: config/policy/mimic/cmu_get_up_from_laying_back/params/cmu_get_up_from_laying_back.npz
-    policy_dir: config/policy/mimic/cmu_get_up_from_laying_back/
+    motion_file: config/policy/mimic/move_arms_gvhmr/params/move_arms_gvhmr.npz
+    policy_dir: config/policy/mimic/move_arms_gvhmr/
     time_start: 0.0
     time_end: 1000.0
