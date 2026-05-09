@@ -28,6 +28,14 @@ FSM:
       id: 9
       type: Mimic
 
+    HipHop:
+      id: 10
+      type: Mimic
+
+    TaeKwonDo:
+      id: 11
+      type: Mimic
+
   Passive:
     transitions: 
       FixStand: "1" #  or "1" in the keyboard
@@ -87,6 +95,9 @@ FSM:
       Mimic_Lafan1_Dance1_Subject2: "5" # "5" in the keyboard
       Mimic_Squat: "6" # "6" in the keyboard
       Mimic_Move_Arms: "7" # "7" in the keyboard
+      HipHop: "8" # "8" in the keyboard
+      TaeKwonDo: "9" # "9" in the keyboard
+      
     policy_dir: config/policy/velocity
 
 
@@ -137,5 +148,25 @@ FSM:
 
     motion_file: config/policy/mimic/move_arms_gvhmr/params/move_arms_gvhmr.npz
     policy_dir: config/policy/mimic/move_arms_gvhmr/
+    time_start: 0.0
+    time_end: 1000.0
+
+  HipHop:
+    transitions:
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
+
+    motion_file: config/policy/mimic/hiphop/params/hiphop_gvhmr.npz
+    policy_dir: config/policy/mimic/hiphop/
+    time_start: 0.0
+    time_end: 1000.0
+
+  TaeKwonDo:
+    transitions:
+      Passive: "0" #  or "0" in the keyboard
+      Velocity: "2" #  or "2" in the keyboard
+    
+    motion_file: config/policy/mimic/taekwondo/params/taekwondo_gvhmr.npz
+    policy_dir: config/policy/mimic/taekwondo/
     time_start: 0.0
     time_end: 1000.0
