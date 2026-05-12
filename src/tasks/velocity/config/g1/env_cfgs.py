@@ -197,3 +197,47 @@ def unitree_g1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     twist_cmd.ranges.ang_vel_z = (-0.5, 0.5)
 
   return cfg
+
+
+def unitree_g1_lower_body_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Create Unitree G1 lower-body and waist rough terrain velocity configuration."""
+  cfg = unitree_g1_rough_env_cfg(play=play)
+  cfg.actions["joint_pos"].actuator_names = (
+      r".*hip_pitch_joint",
+      r".*hip_roll_joint",
+      r".*hip_yaw_joint",
+      r".*knee_joint",
+      r".*ankle_pitch_joint",
+      r".*ankle_roll_joint",
+      r"waist_yaw_joint",
+      r"waist_pitch_joint",
+      r"waist_roll_joint",
+  )
+  if isinstance(cfg.actions["joint_pos"].scale, dict):
+    cfg.actions["joint_pos"].scale = {
+        k: v for k, v in cfg.actions["joint_pos"].scale.items()
+        if not any(x in k for x in ("elbow", "shoulder", "wrist"))
+    }
+  return cfg
+
+
+def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Create Unitree G1 lower-body and waist flat terrain velocity configuration."""
+  cfg = unitree_g1_flat_env_cfg(play=play)
+  cfg.actions["joint_pos"].actuator_names = (
+      r".*hip_pitch_joint",
+      r".*hip_roll_joint",
+      r".*hip_yaw_joint",
+      r".*knee_joint",
+      r".*ankle_pitch_joint",
+      r".*ankle_roll_joint",
+      r"waist_yaw_joint",
+      r"waist_pitch_joint",
+      r"waist_roll_joint",
+  )
+  if isinstance(cfg.actions["joint_pos"].scale, dict):
+    cfg.actions["joint_pos"].scale = {
+        k: v for k, v in cfg.actions["joint_pos"].scale.items()
+        if not any(x in k for x in ("elbow", "shoulder", "wrist"))
+    }
+  return cfg
