@@ -206,6 +206,11 @@ def export_deploy_cfg(env: ManagerBasedRlEnv, log_dir: Path):
             "history_length": history_length,
         }
 
+    print(f"cfg", cfg["observations"].keys())
+    for k, v in cfg["observations"].items():
+        print(f"  {k}: {v}")
+        print("--------\n")
+
     with output_path.open("w", encoding="utf-8") as f:
         yaml.dump(
             _to_plain_value(cfg),
