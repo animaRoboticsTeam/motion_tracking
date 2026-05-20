@@ -5,7 +5,8 @@ from .env_cfgs import (
   unitree_g1_flat_env_cfg,
   unitree_g1_rough_env_cfg,
   unitree_g1_lower_body_flat_env_cfg,
-  unitree_g1_lower_body_rough_env_cfg,
+  # unitree_g1_lower_body_rough_env_cfg,
+  # unitree_g1_lower_body_flat_env_cfg_V2,
 )
 from .rl_cfg import unitree_g1_ppo_runner_cfg
 
@@ -25,13 +26,13 @@ register_mjlab_task(
   runner_cls=VelocityOnPolicyRunner,
 )
 
-register_mjlab_task(
-  task_id="Unitree-G1-Rough-LowerBody",
-  env_cfg=unitree_g1_lower_body_rough_env_cfg(),
-  play_env_cfg=unitree_g1_lower_body_rough_env_cfg(play=True),
-  rl_cfg=unitree_g1_ppo_runner_cfg(),
-  runner_cls=VelocityOnPolicyRunner,
-)
+# register_mjlab_task(
+#   task_id="Unitree-G1-Rough-LowerBody",
+#   env_cfg=unitree_g1_lower_body_rough_env_cfg(),
+#   play_env_cfg=unitree_g1_lower_body_rough_env_cfg(play=True),
+#   rl_cfg=unitree_g1_ppo_runner_cfg(),
+#   runner_cls=VelocityOnPolicyRunner,
+# )
 
 register_mjlab_task(
   task_id="Unitree-G1-Flat-LowerBody",
@@ -40,3 +41,11 @@ register_mjlab_task(
   rl_cfg=unitree_g1_ppo_runner_cfg(),
   runner_cls=VelocityOnPolicyRunner,
 )
+
+# register_mjlab_task(
+#   task_id="Unitree-G1-Flat-LowerBody-V2",
+#   env_cfg=unitree_g1_lower_body_flat_env_cfg_V2(),
+#   play_env_cfg=unitree_g1_lower_body_flat_env_cfg_V2(play=True),
+#   rl_cfg=unitree_g1_ppo_runner_cfg(),
+#   runner_cls=VelocityOnPolicyRunner,
+# )

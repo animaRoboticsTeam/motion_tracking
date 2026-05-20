@@ -12,6 +12,7 @@ from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.sensor import ContactMatch, ContactSensorCfg, RayCastSensorCfg
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
+from mjlab.managers.scene_entity_config import SceneEntityCfg
 from src.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 
 
@@ -198,33 +199,10 @@ def unitree_g1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   return cfg
 
-
-def unitree_g1_lower_body_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
-  """Create Unitree G1 lower-body and waist rough terrain velocity configuration."""
-  cfg = unitree_g1_rough_env_cfg(play=play)
-  cfg.actions["joint_pos"].actuator_names = (
-      r".*hip_pitch_joint",
-      r".*hip_roll_joint",
-      r".*hip_yaw_joint",
-      r".*knee_joint",
-      r".*ankle_pitch_joint",
-      r".*ankle_roll_joint",
-      r"waist_yaw_joint",
-      r"waist_pitch_joint",
-      r"waist_roll_joint",
-  )
-  if isinstance(cfg.actions["joint_pos"].scale, dict):
-    cfg.actions["joint_pos"].scale = {
-        k: v for k, v in cfg.actions["joint_pos"].scale.items()
-        if not any(x in k for x in ("elbow", "shoulder", "wrist"))
-    }
-  return cfg
-
-
 def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
-  """Create Unitree G1 lower-body and waist flat terrain velocity configuration."""
+  """Create Unitree G1 lower-body and waist flat terrain locomotion and balance configuration."""
   cfg = unitree_g1_flat_env_cfg(play=play)
-  cfg.actions["joint_pos"].actuator_names = (
+  lower_body_joints = (
       r".*hip_pitch_joint",
       r".*hip_roll_joint",
       r".*hip_yaw_joint",
@@ -235,9 +213,76 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
       r"waist_pitch_joint",
       r"waist_roll_joint",
   )
+  cfg.actions["joint_pos"].actuator_names = lower_body_joints
   if isinstance(cfg.actions["joint_pos"].scale, dict):
     cfg.actions["joint_pos"].scale = {
         k: v for k, v in cfg.actions["joint_pos"].scale.items()
         if not any(x in k for x in ("elbow", "shoulder", "wrist"))
     }
+
+  # Align joint_names for posture rewards to match lower body dimension (15).
+  if "pose" in cfg.rewards:
+    cfg.rewards["pose"].params["asset_cfg"].joint_names = lower_body_joints
+    for std_key in ("std_walking", "std_running"):
+      if std_key in cfg.rewards["pose"].params:
+        old_std = cfg.rewards["pose"].params[std_key]
+        cfg.rewards["pose"].params[std_key] = {
+            k: v for k, v in old_std.items()
+            if not any(arm in k for arm in ("shoulder", "elbow", "wrist"))
+        }
+  if "stand_still" in cfg.rewards:
+    cfg.rewards["stand_still"].params["asset_cfg"].joint_names = lower_body_joints
+
+  if not play:
+    # 1. Increase CoM randomization range to simulate upper body movement/payload shifts.
+    if "base_com" in cfg.events:
+      cfg.events["base_com"].params["ranges"] = {
+          0: (-0.05, 0.05),
+          1: (-0.05, 0.05),
+          2: (-0.05, 0.05),
+      }
+
+    # 2. Add roll and pitch perturbation at reset to force the robot to learn balance recovery from tilted states.
+    if "reset_base" in cfg.events:
+      cfg.events["reset_base"].params["pose_range"] = {
+          "x": (-0.5, 0.5),
+          "y": (-0.5, 0.5),
+          "z": (0.0, 0.0),
+          "roll": (-0.2, 0.2),
+          "pitch": (-0.2, 0.2),
+          "yaw": (-3.14, 3.14),
+      }
+
+    # 3. Relax posture and stand_still penalties so the robot is willing to step/move legs to recover balance when standing/moving slowly.
+    if "pose" in cfg.rewards:
+      # Loosen std_standing from 0.05 to allow more leg movement during balance recovery
+      cfg.rewards["pose"].params["std_standing"] = {
+          r".*hip_pitch.*": 0.3,
+          r".*hip_roll.*": 0.2,
+          r".*hip_yaw.*": 0.2,
+          r".*knee.*": 0.3,
+          r".*ankle_pitch.*": 0.2,
+          r".*ankle_roll.*": 0.15,
+          r".*waist.*": 0.15,
+      }
+    if "stand_still" in cfg.rewards:
+      # Reduce the stand_still penalty weight significantly (e.g. from -1.0 to -0.05)
+      cfg.rewards["stand_still"].weight = -0.05
+
+    # 4. Randomize arm joint positions at reset so locomotion does not overfit to a static upper body posture.
+    cfg.events["randomize_arm_joints"] = EventTermCfg(
+        func=envs_mdp.reset_joints_by_offset,
+        mode="reset",
+        params={
+            "position_range": (-0.5, 0.5),
+            "velocity_range": (-0.0, 0.0),
+            "asset_cfg": SceneEntityCfg(
+                "robot", joint_names=(".*shoulder.*", ".*elbow.*", ".*wrist.*")
+            ),
+        },
+    )
+    # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
+    if "action_rate_l2" in cfg.rewards:
+      cfg.rewards["action_rate_l2"].weight = -0.005
+
   return cfg

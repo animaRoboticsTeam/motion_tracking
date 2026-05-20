@@ -20,6 +20,8 @@ from mjlab.utils.torch import configure_torch_backends
 from mjlab.utils.wrappers import VideoRecorder
 from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
 
+# python scripts/play.py Unitree-G1-Flat-LowerBody --checkpoint_file=logs/rsl_rl/g1_velocity/2026-05-15_17-05-33_velocity_lowerbody/model_2200.pt
+
 
 @dataclass(frozen=True)
 class PlayConfig:

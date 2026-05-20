@@ -14,22 +14,6 @@ public:
     
     void enter()
     {
-        start_time = std::chrono::steady_clock::now();
-
-        // 记录切换瞬间的初始关节位置
-        // 假设机器人有 29 个电机
-        auto& ms = FSMState::lowstate->msg_.motor_state(); 
-        for (int i = 0; i < ms.size(); ++i)
-        {
-            // 直接从 motor_state 结构体中读取当前的弧度值 q()
-            initial_q[i] = ms[i].q();
-        }
-        
-        interpolation_done = false;
-        transition_time = 1.5f;
-        // ...
-
-
         // set gain
         for (int i = 0; i < env->robot->data.joint_stiffness.size(); ++i)
         {
@@ -38,6 +22,15 @@ public:
             lowcmd->msg_.motor_cmd()[i].dq() = 0;
             lowcmd->msg_.motor_cmd()[i].tau() = 0;
         }
+
+        // lowcmd->msg_.motor_cmd()[18].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[25].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[22].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[23].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[24].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[15].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[16].q() = 0; // set tail up for better balance
+        // lowcmd->msg_.motor_cmd()[17].q() = 0; // set tail up for better balance
 
         env->robot->update();
         // Start policy thread
@@ -77,12 +70,6 @@ private:
 
     std::thread policy_thread;
     bool policy_thread_running = false;
-
-    // --- 修改开始：插值相关变量 ---
-    float initial_q[29];           // 存储进入状态时的关节位置
-    bool interpolation_done = false;
-    float transition_time = 1.5f; // 过渡时间设为 1.5 秒
-    // --- 修改结束 ---
 };
 
 REGISTER_FSM(State_RLBase)
