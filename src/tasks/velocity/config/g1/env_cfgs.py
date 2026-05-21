@@ -268,9 +268,33 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
       }
 
     # 4. Randomize arm joint positions at reset so locomotion does not overfit to a static upper body posture.
+    # cfg.events["randomize_arm_joints"] = EventTermCfg(
+    #     func=envs_mdp.reset_joints_by_offset,
+    #     mode="reset",
+    #     params={
+    #         "position_range": (-0.5, 0.5),
+    #         "velocity_range": (-0.0, 0.0),
+    #         "asset_cfg": SceneEntityCfg(
+    #             "robot", joint_names=(".*shoulder.*", ".*elbow.*", ".*wrist.*")
+    #         ),
+    #     },
+    # )
+    # # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
+    # if "action_rate_l2" in cfg.rewards:
+    #   cfg.rewards["action_rate_l2"].weight = -0.005
+
+  if play:
+    # twist_cmd = cfg.commands["twist"]
+    # assert isinstance(twist_cmd, UniformVelocityCommandCfg)
+    # # 将命令速度随机范围强行修改为 [0.0, 0.0]
+    # twist_cmd.ranges.lin_vel_x = (0.0, 0.0)  # 原为 (-0.5, 1.0)
+    # twist_cmd.ranges.lin_vel_y = (0.0, 0.0)  # 原为 (-0.5, 0.5)
+    # twist_cmd.ranges.ang_vel_z = (0.0, 0.0)  # 原为 (-0.5, 0.5)
+
     cfg.events["randomize_arm_joints"] = EventTermCfg(
         func=envs_mdp.reset_joints_by_offset,
-        mode="reset",
+        mode="interval",
+        interval_range_s=(1.0, 3.0),
         params={
             "position_range": (-0.5, 0.5),
             "velocity_range": (-0.0, 0.0),
@@ -279,16 +303,5 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
             ),
         },
     )
-    # # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
-    # if "action_rate_l2" in cfg.rewards:
-    #   cfg.rewards["action_rate_l2"].weight = -0.005
-
-  if play:
-    twist_cmd = cfg.commands["twist"]
-    assert isinstance(twist_cmd, UniformVelocityCommandCfg)
-    # 将命令速度随机范围强行修改为 [0.0, 0.0]
-    twist_cmd.ranges.lin_vel_x = (0.0, 0.0)  # 原为 (-0.5, 1.0)
-    twist_cmd.ranges.lin_vel_y = (0.0, 0.0)  # 原为 (-0.5, 0.5)
-    twist_cmd.ranges.ang_vel_z = (0.0, 0.0)  # 原为 (-0.5, 0.5)
 
   return cfg
