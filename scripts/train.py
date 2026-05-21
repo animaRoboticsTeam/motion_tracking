@@ -96,6 +96,11 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
     cfg=cfg.env, device=device, render_mode="rgb_array" if cfg.video else None
   )
 
+  # action_manager = env.action_manager
+  # action_term = action_manager.get_term("joint_pos")
+  # print("-----target_ids:", action_term.target_ids)
+  # print("-----target_names", action_term.target_names)
+  # return
   # Export deploy.yaml
   export_deploy_cfg(env, log_dir)
 

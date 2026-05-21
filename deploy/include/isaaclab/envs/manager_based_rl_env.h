@@ -62,6 +62,17 @@ public:
         robot->update();
         auto obs = observation_manager->compute();
         auto action = alg->act(obs);
+
+        // if (episode_length <= 3) {
+        //     std::cout << "\n[DEBUG C++] Step: " << episode_length 
+        //             << ", Obs Vector Size: " << obs["obs"].size() << std::endl;
+        //     for (size_t i = 0; i < obs["obs"].size(); ++i) {
+        //         std::cout << i << ":" << obs["obs"][i] << "  ";
+        //         if ((i + 1) % 10 == 0) std::cout << "\n";
+        //     }
+        //     std::cout << "\n---------------------------------------------\n" << std::endl;
+        // }
+
         action_manager->process_action(action);
     }
 

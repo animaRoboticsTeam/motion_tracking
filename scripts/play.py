@@ -126,6 +126,16 @@ def run_play(task_id: str, cfg: PlayConfig):
  
   env = ManagerBasedRlEnv(cfg=env_cfg, device=device, render_mode=render_mode)
 
+  # ---
+  # obs, _ = env.reset()
+  # # print(f"\n[DEBUG Python] Step 0, Obs Shape: {obs[""]}")
+  # print(f"\n[DEBUG Python] Step 0, Obs Shape: {obs['actor'].shape}")
+  # obs_numpy = obs["actor"].cpu().numpy()
+  # for i, val in enumerate(obs_numpy):
+  #     print(f"{i}:{val}")
+  #     if (i + 1) % 10 == 0:
+  #         print()
+
   if TRAINED_MODE and cfg.video:
     print("[INFO] Recording videos during play")
     assert log_dir is not None  # log_dir is set in TRAINED_MODE block
@@ -172,6 +182,7 @@ def run_play(task_id: str, cfg: PlayConfig):
   else:
     resolved_viewer = cfg.viewer
 
+  print(f"[INFO] Using viewer: {resolved_viewer}")
   if resolved_viewer == "native":
     NativeMujocoViewer(env, policy).run()
   elif resolved_viewer == "viser":

@@ -230,6 +230,7 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
             k: v for k, v in old_std.items()
             if not any(arm in k for arm in ("shoulder", "elbow", "wrist"))
         }
+
   if "stand_still" in cfg.rewards:
     cfg.rewards["stand_still"].params["asset_cfg"].joint_names = lower_body_joints
 
@@ -265,9 +266,6 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
           r".*ankle_roll.*": 0.15,
           r".*waist.*": 0.15,
       }
-    if "stand_still" in cfg.rewards:
-      # Reduce the stand_still penalty weight significantly (e.g. from -1.0 to -0.05)
-      cfg.rewards["stand_still"].weight = -0.05
 
     # 4. Randomize arm joint positions at reset so locomotion does not overfit to a static upper body posture.
     cfg.events["randomize_arm_joints"] = EventTermCfg(
@@ -281,8 +279,16 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
             ),
         },
     )
-    # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
-    if "action_rate_l2" in cfg.rewards:
-      cfg.rewards["action_rate_l2"].weight = -0.005
+    # # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
+    # if "action_rate_l2" in cfg.rewards:
+    #   cfg.rewards["action_rate_l2"].weight = -0.005
+
+  if play:
+    twist_cmd = cfg.commands["twist"]
+    assert isinstance(twist_cmd, UniformVelocityCommandCfg)
+    # 将命令速度随机范围强行修改为 [0.0, 0.0]
+    twist_cmd.ranges.lin_vel_x = (0.0, 0.0)  # 原为 (-0.5, 1.0)
+    twist_cmd.ranges.lin_vel_y = (0.0, 0.0)  # 原为 (-0.5, 0.5)
+    twist_cmd.ranges.ang_vel_z = (0.0, 0.0)  # 原为 (-0.5, 0.5)
 
   return cfg

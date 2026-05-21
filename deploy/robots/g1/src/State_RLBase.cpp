@@ -57,4 +57,7 @@ void State_RLBase::run()
     for(int i(0); i < action.size(); i++) {
         lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = action[i];
     }
+    for(int i = action.size(); i < env->robot->data.joint_ids_map.size(); i++) {
+        lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = env->robot->data.default_joint_pos[i];
+    }
 }
