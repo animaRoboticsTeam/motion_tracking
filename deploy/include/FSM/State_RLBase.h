@@ -23,15 +23,6 @@ public:
             lowcmd->msg_.motor_cmd()[i].tau() = 0;
         }
 
-        // lowcmd->msg_.motor_cmd()[18].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[25].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[22].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[23].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[24].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[15].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[16].q() = 0; // set tail up for better balance
-        // lowcmd->msg_.motor_cmd()[17].q() = 0; // set tail up for better balance
-
         env->robot->update();
         // Start policy thread
         policy_thread_running = true;

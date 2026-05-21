@@ -234,6 +234,19 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
   if "stand_still" in cfg.rewards:
     cfg.rewards["stand_still"].params["asset_cfg"].joint_names = lower_body_joints
 
+  # Limit joint_pos and joint_vel observations to only lower body joints
+  for group_name in ("actor", "critic"):
+    if group_name in cfg.observations:
+      group = cfg.observations[group_name]
+      if "joint_pos" in group.terms:
+        group.terms["joint_pos"].params = {
+            "asset_cfg": SceneEntityCfg("robot", joint_names=lower_body_joints)
+        }
+      if "joint_vel" in group.terms:
+        group.terms["joint_vel"].params = {
+            "asset_cfg": SceneEntityCfg("robot", joint_names=lower_body_joints)
+        }
+
   if not play:
     # 1. Increase CoM randomization range to simulate upper body movement/payload shifts.
     if "base_com" in cfg.events:
@@ -266,22 +279,8 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
           r".*ankle_roll.*": 0.15,
           r".*waist.*": 0.15,
       }
-
-    # 4. Randomize arm joint positions at reset so locomotion does not overfit to a static upper body posture.
-    # cfg.events["randomize_arm_joints"] = EventTermCfg(
-    #     func=envs_mdp.reset_joints_by_offset,
-    #     mode="reset",
-    #     params={
-    #         "position_range": (-0.5, 0.5),
-    #         "velocity_range": (-0.0, 0.0),
-    #         "asset_cfg": SceneEntityCfg(
-    #             "robot", joint_names=(".*shoulder.*", ".*elbow.*", ".*wrist.*")
-    #         ),
-    #     },
-    # )
-    # # 5. Temporarily relax action rate penalty to encourage locomotion exploration.
-    # if "action_rate_l2" in cfg.rewards:
-    #   cfg.rewards["action_rate_l2"].weight = -0.005
+    if "stand_still" in cfg.rewards:
+      cfg.rewards["stand_still"].weight = -0.05
 
   if play:
     # twist_cmd = cfg.commands["twist"]

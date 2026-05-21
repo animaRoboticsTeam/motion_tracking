@@ -63,7 +63,7 @@ public:
         auto obs = observation_manager->compute();
         auto action = alg->act(obs);
 
-        // if (episode_length <= 3) {
+        // if (episode_length <= 500) {
         //     std::cout << "\n[DEBUG C++] Step: " << episode_length 
         //             << ", Obs Vector Size: " << obs["obs"].size() << std::endl;
         //     for (size_t i = 0; i < obs["obs"].size(); ++i) {

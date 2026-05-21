@@ -125,6 +125,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
 
     motion_file: config/policy/mimic/taichi_v0/params/tai_chi.npz
     policy_dir: config/policy/mimic/taichi_v0/
