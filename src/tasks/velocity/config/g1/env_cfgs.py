@@ -247,40 +247,6 @@ def unitree_g1_lower_body_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
             "asset_cfg": SceneEntityCfg("robot", joint_names=lower_body_joints)
         }
 
-  if not play:
-    # 1. Increase CoM randomization range to simulate upper body movement/payload shifts.
-    if "base_com" in cfg.events:
-      cfg.events["base_com"].params["ranges"] = {
-          0: (-0.05, 0.05),
-          1: (-0.05, 0.05),
-          2: (-0.05, 0.05),
-      }
-
-    # 2. Add roll and pitch perturbation at reset to force the robot to learn balance recovery from tilted states.
-    if "reset_base" in cfg.events:
-      cfg.events["reset_base"].params["pose_range"] = {
-          "x": (-0.5, 0.5),
-          "y": (-0.5, 0.5),
-          "z": (0.0, 0.0),
-          "roll": (-0.2, 0.2),
-          "pitch": (-0.2, 0.2),
-          "yaw": (-3.14, 3.14),
-      }
-
-    # 3. Relax posture and stand_still penalties so the robot is willing to step/move legs to recover balance when standing/moving slowly.
-    if "pose" in cfg.rewards:
-      # Loosen std_standing from 0.05 to allow more leg movement during balance recovery
-      cfg.rewards["pose"].params["std_standing"] = {
-          r".*hip_pitch.*": 0.3,
-          r".*hip_roll.*": 0.2,
-          r".*hip_yaw.*": 0.2,
-          r".*knee.*": 0.3,
-          r".*ankle_pitch.*": 0.2,
-          r".*ankle_roll.*": 0.15,
-          r".*waist.*": 0.15,
-      }
-    if "stand_still" in cfg.rewards:
-      cfg.rewards["stand_still"].weight = -0.05
 
   if play:
     # twist_cmd = cfg.commands["twist"]
