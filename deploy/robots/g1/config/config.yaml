@@ -136,6 +136,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
 
     motion_file: config/policy/mimic/pick_up_box/params/ACCAD_Female1General_c3d_A5_pick_up_box_stageii.npz
     policy_dir: config/policy/mimic/pick_up_box/
@@ -146,6 +147,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
 
     motion_file: config/policy/mimic/lafan1_dance1_subject2/params/dance1_subject2.npz
     policy_dir: config/policy/mimic/lafan1_dance1_subject2/
@@ -167,6 +169,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
 
     motion_file: config/policy/mimic/move_arms_gvhmr/params/move_arms_gvhmr.npz
     policy_dir: config/policy/mimic/move_arms_gvhmr/
@@ -177,6 +180,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
 
     motion_file: config/policy/mimic/hiphop/params/hiphop_gvhmr.npz
     policy_dir: config/policy/mimic/hiphop/
@@ -187,6 +191,7 @@ FSM:
     transitions:
       Passive: "0" #  or "0" in the keyboard
       Velocity: "2" #  or "2" in the keyboard
+      Velocity_LowerBody: "c" #  or "c" in the keyboard
     
     motion_file: config/policy/mimic/taekwondo/params/taekwondo_gvhmr.npz
     policy_dir: config/policy/mimic/taekwondo/
