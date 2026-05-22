@@ -6,6 +6,8 @@
 #include "FSMState.h"
 #include "isaaclab/envs/mdp/actions/joint_actions.h"
 #include "isaaclab/envs/mdp/terminations.h"
+#include <vector>
+#include <chrono>
 
 class State_RLBase : public FSMState
 {
@@ -14,6 +16,8 @@ public:
     
     void enter()
     {
+        start_time = std::chrono::steady_clock::now();
+
         // set gain
         for (int i = 0; i < env->robot->data.joint_stiffness.size(); ++i)
         {
@@ -21,6 +25,21 @@ public:
             lowcmd->msg_.motor_cmd()[i].kd() = env->robot->data.joint_damping[i];
             lowcmd->msg_.motor_cmd()[i].dq() = 0;
             lowcmd->msg_.motor_cmd()[i].tau() = 0;
+        }
+
+        if (has_upper_body_)
+        {
+            int rl_joint_count = env->robot->data.joint_stiffness.size();
+            upper_body_q0_.clear();
+            for (size_t i = 0; i < upper_body_kp_.size(); ++i)
+            {
+                int motor_idx = rl_joint_count + i;
+                auto & motor = lowcmd->msg_.motor_cmd()[motor_idx];
+                motor.kp() = upper_body_kp_[i];
+                motor.kd() = upper_body_kd_[i];
+                motor.dq() = motor.tau() = 0;
+                upper_body_q0_.push_back(motor.q());
+            }
         }
 
         env->robot->update();
@@ -55,6 +74,13 @@ public:
             policy_thread.join();
         }
     }
+
+protected:
+    bool has_upper_body_ = false;
+    std::vector<float> upper_body_kp_;
+    std::vector<float> upper_body_kd_;
+    std::vector<float> upper_body_qs_;
+    std::vector<float> upper_body_q0_;
 
 private:
     std::unique_ptr<isaaclab::ManagerBasedRLEnv> env;

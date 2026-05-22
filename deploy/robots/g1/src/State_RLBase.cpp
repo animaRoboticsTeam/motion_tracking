@@ -3,6 +3,7 @@
 #include "isaaclab/envs/mdp/observations/observations.h"
 #include "isaaclab/envs/mdp/actions/joint_actions.h"
 #include <unordered_map>
+#include <algorithm>
 
 namespace isaaclab
 {
@@ -43,6 +44,18 @@ State_RLBase::State_RLBase(int state_mode, std::string state_string)
     );
     env->alg = std::make_unique<isaaclab::OrtRunner>(policy_dir / "exported" / "policy.onnx");
 
+    if (cfg["upper_body_kp"] && cfg["upper_body_kd"] && cfg["upper_body_qs"])
+    {
+        has_upper_body_ = true;
+        upper_body_kp_ = cfg["upper_body_kp"].as<std::vector<float>>();
+        upper_body_kd_ = cfg["upper_body_kd"].as<std::vector<float>>();
+        upper_body_qs_ = cfg["upper_body_qs"].as<std::vector<float>>();
+    }
+    else
+    {
+        has_upper_body_ = false;
+    }
+
     this->registered_checks.emplace_back(
         std::make_pair(
             [&]()->bool{ return isaaclab::mdp::bad_orientation(env.get(), 1.0); },
@@ -57,7 +70,24 @@ void State_RLBase::run()
     for(int i(0); i < action.size(); i++) {
         lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = action[i];
     }
-    for(int i = action.size(); i < env->robot->data.joint_ids_map.size(); i++) {
-        lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = env->robot->data.default_joint_pos[i];
+    
+    if (has_upper_body_)
+    {
+        double t = duration();
+        double interp_duration = 2.0;
+        double alpha = std::clamp(t / interp_duration, 0.0, 1.0);
+        int rl_joint_count = action.size();
+        for (size_t i = 0; i < upper_body_qs_.size(); ++i)
+        {
+            int motor_idx = rl_joint_count + i;
+            float target_q = upper_body_q0_[i] * (1.0f - alpha) + upper_body_qs_[i] * alpha;
+            lowcmd->msg_.motor_cmd()[motor_idx].q() = target_q;
+        }
+    }
+    else
+    {
+        for(int i = action.size(); i < env->robot->data.joint_ids_map.size(); i++) {
+            lowcmd->msg_.motor_cmd()[env->robot->data.joint_ids_map[i]].q() = env->robot->data.default_joint_pos[i];
+        }
     }
 }

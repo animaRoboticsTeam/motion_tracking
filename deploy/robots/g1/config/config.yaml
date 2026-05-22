@@ -121,6 +121,19 @@ FSM:
       
     policy_dir: config/policy/velocity/lower_body
 
+    upper_body_kp: [
+      40,40,40,40,40,40,40,
+      40,40,40,40,40,40,40,
+    ]
+    upper_body_kd: [
+      10,10,10,10,10,10,10,
+      10,10,10,10,10,10,10,
+    ]
+    upper_body_qs: [
+      0.35, 0.18,0,0.87,0,0,0,
+      0.35,-0.18,0,0.87,0,0,0
+    ]
+
   Mimic_TaiChi:
     transitions:
       Passive: "0" #  or "0" in the keyboard

@@ -109,7 +109,7 @@ State_Mimic::State_Mimic(int state_mode, std::string state_string)
     } else {
         time_range_[1] = motion_->duration;
     }
-    std::string end_state = "Velocity";
+    std::string end_state = "Velocity_LowerBody";
     if (cfg["end_state"]) {
         end_state = cfg["end_state"].as<std::string>();
     }
